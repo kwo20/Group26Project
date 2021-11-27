@@ -42,5 +42,26 @@ string account::getPayment()
 
 void account::printAccount()
 {
-  cout << username << "\n" << password << "\n" << shipping_info << "\n" << payment_info;
+  cout << username << "\n" << password << "\n" << shipping_info << "\n" << payment_info << "\n";
+}
+
+void account::add_item(int quantity, class item item_to_add)
+{
+  item_to_add.setQuantity(quantity);
+  account_cart.add_items(item_to_add);
+}
+
+void account::remove_item(int item_number)
+{
+  account_cart.remove_items(item_number);
+}
+
+void account::printCart()
+{
+  account_cart.view_cart();
+}
+
+void account::checkout()
+{
+  account_cart.checkout();
 }
