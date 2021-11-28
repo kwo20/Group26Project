@@ -13,10 +13,20 @@ int cart::getTotal() {
 	return total;
 }
 
+string cart::getUsername() {
+
+	return username;
+}
+
 //settters
 void cart::setTotal(int total) {
 
 	this->total = total;
+}
+
+void cart::setUsername(string username) {
+
+	this->username = username;
 }
 
 //functions
@@ -50,14 +60,18 @@ void cart::checkout() {
 	
 	add_history();
 
-	items.clear();
+	for(int i = 0; i<items.size(); i++)
+  {
+    items.pop_back();
+  }
 
 }
 
 void cart::add_history() {
 	ofstream file_in;
+	string user = getUsername();
 	
-	file_in.open("History", std::ofstream::out | std::ofstream::app);
+	file_in.open(user + " History", std::ofstream::out | std::ofstream::app);
 	
 	file_in << "\n";
 	
@@ -73,12 +87,14 @@ void cart::add_history() {
 }
 
 void cart::view_history() {
-
+  
+  
 	fstream file_out;
 	string line;
 	int count = 0;
+	string user = getUsername();
 
-	file_out.open("History", std::ofstream::in);
+	file_out.open(user + " History", std::ofstream::in);
 
 	if(file_out.is_open()){
 
@@ -92,12 +108,27 @@ void cart::view_history() {
 			count++;
 
 		}
+    
 	}
 
 	cout << "\n";
 
 	file_out.close();
+  
 }
+
+void cart::del_history() {
+
+	string user = getUsername();
+
+	fstream file;
+
+	file.open(user + " History", std::ofstream::in | std::ofstream::trunc);
+
+	file.close();
+
+}
+
 void cart::add_items(class item item_to_add)
 {
   items.push_back(item_to_add);
@@ -119,3 +150,7 @@ int cart::getItemQuantity(int q)
   return items[q].getQuantity();
 }
 
+void cart::clear_cart()
+{
+  items.clear();
+}
