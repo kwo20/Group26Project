@@ -52,6 +52,8 @@ public:
 
   void remove_items(int item_number);
 
+  void clear_cart();
+
 
 
 };

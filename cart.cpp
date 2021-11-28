@@ -33,8 +33,8 @@ void cart::setUsername(string username) {
 void cart::view_cart() {
 
 	for (int i = 0; i < items.size(); i++) {
-
-		cout << "(" << i+1 << ") ";
+		//Changed from a (1) so that it would be more consistent and easy to read.
+		cout << i+1 << ". ";
     cout << items[i].getName() << "   ";
 		cout << items[i].getQuantity() << "   ";
 		cout << items[i].getPrice() << "\n";
@@ -60,7 +60,10 @@ void cart::checkout() {
 	
 	add_history();
 
-	items.clear();
+	for(int i = 0; i<items.size(); i++)
+  {
+    items.pop_back();
+  }
 
 }
 
@@ -84,7 +87,8 @@ void cart::add_history() {
 }
 
 void cart::view_history() {
-
+  
+  
 	fstream file_out;
 	string line;
 	int count = 0;
@@ -104,11 +108,13 @@ void cart::view_history() {
 			count++;
 
 		}
+    
 	}
 
 	cout << "\n";
 
 	file_out.close();
+  
 }
 
 void cart::del_history() {
@@ -117,8 +123,9 @@ void cart::del_history() {
 
 	fstream file;
 
+	//Fix - file does not delete contents when truc
 	file.open(user + " History", std::ofstream::in | std::ofstream::trunc);
-
+	file << " ";
 	file.close();
 
 }
@@ -135,6 +142,7 @@ void cart::remove_items(int item_number)
 
 string cart::getItemName(int q)
 {
+  //Problem occurs here ---FIXED
   string test = items[q].getName();
   return test;
 }
@@ -144,3 +152,12 @@ int cart::getItemQuantity(int q)
   return items[q].getQuantity();
 }
 
+void cart::clear_cart()
+{
+	//bug: clear cart data when deleting account breaks the program
+
+	if (items.size() > 0) {
+		items.clear();
+	}
+	//items.clear();
+}
