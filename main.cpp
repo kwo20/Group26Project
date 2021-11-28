@@ -8,7 +8,7 @@
 #include "cart.h"
 using namespace std;
 int i;
-int account_option, shop_option, cart_size;
+int account_option, cart_size;
 int main() 
 {
   vector<account> accounts;
@@ -61,7 +61,7 @@ int main()
     file2.close();
   }
   
-  int menu_option, login_option;
+  int menu_option, login_option, shop_option;
   
   string username, password, shipping_info, payment_info;
   
@@ -102,6 +102,8 @@ int main()
           {
             //continue with shop
             cout << "Welcome, " << username << "\n\n";
+            carts.setUsername(username);
+            
             while(1)
             {
               cout << "(1)View Shop\n" << "(2)View Cart\n" << "(3)View Account\n" << "(4)Logout\n";
@@ -140,7 +142,7 @@ int main()
                           break;
                         }
                       }
-                      accounts[i].add_item(item_quantity, items[item_choice-1]);
+                      //accounts[i].add_item(item_quantity, items[item_choice-1]);
                       item current_cart_item;
                       current_cart_item.setName(items[item_choice-1].getName());
                       current_cart_item.setQuantity(item_quantity);
@@ -164,34 +166,36 @@ int main()
               {
                 while(1)
                 {
-                  int cart_option;
-                  accounts[i].printCart();
+                  int cart_option = 0;
+                  carts.view_cart();
                   cout << "(1)Remove item from cart\n" << "(2)Checkout\n" << "(3)Go back\n";
                   cin >> cart_option;
+                  printf("test");
                   if(cart_option == 1)
                   {
                     int item_to_remove;
                     cout << "Please enter the number corresponding to the item you want to remove: ";
                     cin >> item_to_remove;
-                    accounts[i].remove_item(item_to_remove);
+                    carts.remove_items(item_to_remove);
                     cart_size-=1;
                   }
                   else if(cart_option == 2)
                   {
-                    
+                    printf("test1");
                     for(int t = 0; t<cart_size; t++)
                     {
+                      printf("test2");
                       for(int s = 0; s<items.size(); s++)
-                      {                     
+                      {              
+                        printf("test3");       
                         if(carts.getItemName(t) == items[s].getName())
                         {
+                          printf("test4");
                           items[s].decreaseQuantity(carts.getItemQuantity(t));
                         }
                       }
                     }
-                    carts.checkout();
-                    accounts[i].checkout();
-                    
+                    carts.checkout();                   
                   }
                   else if(cart_option == 3)
                   {
@@ -209,6 +213,7 @@ int main()
                   if(account_option == 1)
                   {
                     accounts[i].printAccount();
+                    carts.view_history();
                   }
                   else if(account_option == 2)
                   {
@@ -243,7 +248,10 @@ int main()
               }
               if(login_option == 4)
               {
+                carts.clear_cart();
+                accounts[i].clearCart();
                 break;
+                
               }
             }
           }
