@@ -12,6 +12,7 @@ private:
 	
 	vector <item> items;
 	int total;
+	string username;
 
 public:
 
@@ -22,8 +23,13 @@ public:
 	//setters
 	void setTotal(int total);
 
+	void setUsername(string username);
+
 	//getters
 	int getTotal();
+
+	string getUsername();
+
 
 	string getItemName(int q);
 
@@ -40,9 +46,13 @@ public:
 
 	void add_history();
 
+	void del_history();
+
   void add_items(class item item_to_add);
 
   void remove_items(int item_number);
+
+  void clear_cart();
 
 
 
