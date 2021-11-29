@@ -29,6 +29,8 @@ class account : public cart
     string getShipping();
     string getPayment();
     void checkout();
+    void viewHistory();
+    void clearCart();
 
     void printAccount();
     void add_item(int quantity, class item item_to_add);
