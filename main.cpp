@@ -3,11 +3,13 @@
 #include <vector>
 #include <ostream>
 #include <fstream>
+#include <stdio.h>
 #include "account.h"
 #include "item.h"
 #include "cart.h"
 using namespace std;
 int i;
+
 int account_option, cart_size;
 int main() 
 {
@@ -24,6 +26,7 @@ int main()
   itemfile = "item.txt";
   file.open(accountfile);
   
+  //reads in the account information from the file to the program
   if (file.is_open())
   {
     while ( getline (file,line) )
@@ -41,6 +44,7 @@ int main()
     file.close();
   }
   
+  //reads in the item information from the file to the program
   int quantity;
   float price;
   file2.open(itemfile);
@@ -65,11 +69,14 @@ int main()
   
   string username, password, shipping_info, payment_info;
   
+  //Main Menu
   cout << "Welcome to the Group 26 Store!" << "\n";
   while(1)
   {
     cout << "Would you like to login(1), create a new account(2), or exit(3)?";
     cin >> menu_option;
+
+    //Create Account 
     if(menu_option == 2)
     {
       cout << "Please enter the following information:\n";
@@ -86,6 +93,8 @@ int main()
       cout << "Account created! Now please login.\n";
       menu_option = 1;
     }
+
+    //Login information
     if(menu_option == 1)
     {
       cout << "Username: ";
@@ -101,17 +110,25 @@ int main()
           if(password == accounts[i].getPass())
           {
             //continue with shop
-            cout << "Welcome, " << username << "\n\n";
+            cout << "\x1B[2J\x1B[H";
+            cout << "Welcome, " << username << "\n";
             carts.setUsername(username);
             
             while(1)
             {
+              
+              cout << "Main Menu\n\n";
               cout << "(1)View Shop\n" << "(2)View Cart\n" << "(3)View Account\n" << "(4)Logout\n";
               cin >> login_option;
+
+              //View shop options
               if(login_option == 1)
               {
+                cout << "\x1B[2J\x1B[H";
                 while(1)
                 {
+                  
+                  cout << "Shop Catalog\n\n";
                   int item_choice, item_quantity;
                   for(int z = 0; z<items.size(); z++)
                   {
@@ -119,8 +136,11 @@ int main()
                     items[z].viewItem();
                     cout << endl;
                   }
+
                   cout << "(1)Add item to your cart\n" << "(2)Go back\n";
                   cin >> shop_option;
+
+                  //Add items to cart
                   if(shop_option == 1)
                   {
                     cout << "Please input the number that corresponds to the item you want: ";
@@ -142,35 +162,42 @@ int main()
                           break;
                         }
                       }
-                      //accounts[i].add_item(item_quantity, items[item_choice-1]);
                       item current_cart_item;
                       current_cart_item.setName(items[item_choice-1].getName());
                       current_cart_item.setQuantity(item_quantity);
                       current_cart_item.setPrice(items[item_choice-1].getPrice());
                       carts.add_items(current_cart_item);
                       cart_size+=1;
+                      cout << "\x1B[2J\x1B[H";
                       cout << "Item added to your cart!\n";
+                      break;
                     }
                     else
                     {
                       cout << "broke\n";
                     }
                   }
+                  //Goes back
                   else if(shop_option == 2)
                   {
+                    cout << "\x1B[2J\x1B[H";
                     break;
                   }
                 }
               }
+              //View cart options
               else if(login_option == 2)
               {
+                cout << "\x1B[2J\x1B[H";
                 while(1)
                 {
+                  cout << "Cart Menu\n\n";
                   int cart_option = 0;
                   carts.view_cart();
                   cout << "(1)Remove item from cart\n" << "(2)Checkout\n" << "(3)Go back\n";
                   cin >> cart_option;
-                  printf("test");
+
+                  //Remove item from cart
                   if(cart_option == 1)
                   {
                     int item_to_remove;
@@ -178,83 +205,120 @@ int main()
                     cin >> item_to_remove;
                     carts.remove_items(item_to_remove);
                     cart_size-=1;
+                    cout << "\x1B[2J\x1B[H";
+                    cout << "Item Removed!\n";
+                    break;
                   }
+
+                  //Checkout
                   else if(cart_option == 2)
                   {
-                    printf("test1");
+                    
                     for(int t = 0; t<cart_size; t++)
                     {
-                      printf("test2");
+                      
                       for(int s = 0; s<items.size(); s++)
                       {              
-                        printf("test3");       
+                              
                         if(carts.getItemName(t) == items[s].getName())
                         {
-                          printf("test4");
+                          
                           items[s].decreaseQuantity(carts.getItemQuantity(t));
                         }
                       }
                     }
-                    carts.checkout();                   
+                    carts.checkout(); 
+                    cart_size = 0;
+                    cout << "\x1B[2J\x1B[H";
+                    cout << "Checkout successful!\n";
+                    break;
                   }
                   else if(cart_option == 3)
                   {
+                    cout << "\x1B[2J\x1B[H";
                     break;
                   }
                 }
               }
+
+              //View account options
               else if(login_option == 3)
               {
+                cout << "\x1B[2J\x1B[H";
                 while(1)
                 {
+                  
+                  cout << "Account Menu\n\n";
                   string passchange, shipchange, paychange;
-                  cout << "(1)View Account Info\n" << "(2)Change Password\n" << "(3)Change Shipping Information\n" << "(4)Change Payment Information\n" << "(5)Delete Account\n" << "(6)Go Back\n";
+                  cout << "(1)View Account Info\n" << "(2)Change Password\n" << "(3)Change Shipping Information\n" << "(4)Change Payment Information\n" << "(5)Delete Account\n" << "(6)View Order History\n" << "(7)Go Back\n";
                   cin >> account_option;
+                  //View account
                   if(account_option == 1)
                   {
+                    cout << "\x1B[2J\x1B[H";
                     accounts[i].printAccount();
-                    carts.view_history();
                   }
+                  //Change password
                   else if(account_option == 2)
                   {
+                    cout << "Please enter your new password: ";
                     getline(cin >> ws, passchange);
                     accounts[i].setPassword(passchange);
-                    printf("password changed");
+                    cout << "\x1B[2J\x1B[H";
+                    printf("Password changed!\n");
                   }
+                  //Change shipping
                   else if(account_option == 3)
                   {
+                    cout << "Please enter your new shipping address: ";
                     getline(cin >> ws, shipchange);
                     accounts[i].setShipping(shipchange);
-                    printf("shipping info changed");
+                    cout << "\x1B[2J\x1B[H";
+                    printf("Shipping info changed!\n");
                   }
+                  //Change payment information
                   else if(account_option == 4)
                   {
+                    cout << "Please enter your new card number: ";
                     getline(cin >> ws, paychange);
                     accounts[i].setPayment(paychange);
-                    printf("payment info changed");
+                    cout << "\x1B[2J\x1B[H";
+                    printf("Payment info changed!\n");
                   }
+                  //Delete account
                   else if(account_option == 5)
                   {
+                    carts.del_history();
                     accounts.erase(accounts.begin()+i);
-                    printf("Account erased\n");
+                    cout << "\x1B[2J\x1B[H";
+                    printf("Account erased!\n");
                     login_option = 4;
                     break;
                   }
+                  //View order history
                   else if(account_option == 6)
                   {
+                    cout << "\x1B[2J\x1B[H";
+                    carts.view_history();
+                  }
+                  //Goes back
+                  else if(account_option == 7)
+                  {
+                    cout << "\x1B[2J\x1B[H";
                     break;
                   }
                 }
               }
+              //logout
               if(login_option == 4)
               {
                 carts.clear_cart();
-                accounts[i].clearCart();
+                cout << "\x1B[2J\x1B[H";
                 break;
-                
               }
             }
           }
+          //wrong password
           else
           {
             printf("WRONG PASSWORD\n");
@@ -263,17 +327,21 @@ int main()
           break;
         }
       }
+      //Prints user does not exist if user entered an account that do not exists
       if(account_option == 0 && i == accounts.size())
       {
         printf("user doesnt exist\n");
       }
     }
+    //exits the program
     if(menu_option == 3)
     {
       break;
     }
   }
   
+
+  //Writes all of the item and account information to a file to store.
   ofstream account_write;
   account_write.open("account.txt");
   for(int j = 0; j<accounts.size(); j++)
