@@ -42,5 +42,5 @@ void item::increaseQuantity(int quantity)
 
 void item::viewItem()
 {
-  cout << "Name: " << item_name << " " << "Quantity: " << quantity << " " << "Price: " << price << "\n";
+  cout << " Name: " << item_name << " " << " Quantity: " << quantity << " " << " Price: $" << price << "\n";
 }
