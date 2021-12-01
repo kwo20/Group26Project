@@ -7,6 +7,7 @@
 #include "account.h"
 #include "item.h"
 #include "cart.h"
+#include "admin.h"
 using namespace std;
 int i;
 
@@ -15,15 +16,17 @@ int main()
 {
   vector<account> accounts;
   vector<item> items;
+  vector<admin> admins;
   cart carts;
   
-  string accountfile, itemfile;
+  string accountfile, itemfile, adminfile;
   string line;
   
-  fstream file, file2;
+  fstream file, file2, file3;
 
   accountfile = "account.txt";
   itemfile = "item.txt";
+  adminfile = "admin.txt";
   file.open(accountfile);
   
   //reads in the account information from the file to the program
@@ -64,6 +67,26 @@ int main()
     }
     file2.close();
   }
+
+  file3.open(adminfile);
+  
+  //reads in the account information from the file to the program
+  if (file3.is_open())
+  {
+    while ( getline (file3,line) )
+    {
+      admin adminaccount;
+      adminaccount.setUser(line);
+      getline(file3, line);
+      adminaccount.setPassword(line);
+      getline(file3, line);
+      adminaccount.setShipping(line);
+      getline(file3, line);
+      adminaccount.setPayment(line);
+      admins.push_back(adminaccount);
+    }
+    file3.close();
+  }
   
   int menu_option, login_option, shop_option;
   
@@ -73,7 +96,7 @@ int main()
   cout << "Welcome to the Group 26 Store!" << "\n";
   while(1)
   {
-    cout << "Would you like to login(1), create a new account(2), or exit(3)?";
+    cout << "Would you like to login(1), create a new account(2), login as admin(3), or exit(4)?";
     cin >> menu_option;
 
     //Create Account 
@@ -333,8 +356,75 @@ int main()
         printf("user doesnt exist\n");
       }
     }
-    //exits the program
+
     if(menu_option == 3)
+    {
+      cout << "Username: ";
+
+      getline(cin >> ws, username);
+      
+      for(i = 0; i<admins.size(); i++)
+      {
+        
+        if(username == admins[i].getUser())
+        {
+          cout << "Password: ";
+          getline(cin, password);
+          if(password == admins[i].getPass())
+          {
+            //continue with shop
+            cout << "\x1B[2J\x1B[H";
+            cout << "Welcome, " << username << "\n";
+            
+            while(1)
+            {
+              int adminmenu_option = 0;
+              cout << "(1)View User Accounts\n" << "(2)Delete User Account\n" << "(3)Log out\n";
+              cin >> adminmenu_option;
+              //view all accounts (1)
+              if(adminmenu_option == 1)
+              {
+                cout << "\x1B[2J\x1B[H";
+                admins[i].showinfo(accounts);
+              }
+              //delete an account (2)
+              if(adminmenu_option == 2)
+              {
+                int account_to_delete;
+                cout << "Enter the number of the account you would like to delete: ";
+                cin >> account_to_delete;
+                accounts.erase(accounts.begin() + (account_to_delete-1));
+                cout << "\x1B[2J\x1B[H";
+                cout << "Accounted erased!\n";
+              }
+              //log out (3)
+              if(adminmenu_option == 3)
+              {
+                cout << "\x1B[2J\x1B[H";
+                break;
+              }
+            }
+          }
+          else
+          {
+            printf("WRONG PASSWORD\n");
+            break;
+          }
+          break;
+        }
+      }
+
+      /*
+      if(admin_option == 0 && i == admins.size())
+      {
+        printf("admin account doesn't exist\n");
+      }
+      */
+
+
+    }
+    //exits the program
+    if(menu_option == 4)
     {
       break;
     }
@@ -362,4 +452,15 @@ int main()
     item_write << items[j].getPrice() << "\n";
   }
   item_write.close();
+
+  ofstream admin_write;
+  admin_write.open("admin.txt");
+  for(int j = 0; j<admins.size(); j++)
+  {
+    admin_write << admins[j].getUser() << "\n";
+    admin_write << admins[j].getPass() << "\n";
+    admin_write << admins[j].getShipping() << "\n";
+    admin_write << admins[j].getPayment() << "\n";
+  }
+  admin_write.close();
 } 
