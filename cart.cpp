@@ -3,12 +3,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <stdio.h>
 
 using namespace std;
 
 
 //getters
-int cart::getTotal() {
+float cart::getTotal() {
 
 	return total;
 }
@@ -19,7 +20,7 @@ string cart::getUsername() {
 }
 
 //settters
-void cart::setTotal(int total) {
+void cart::setTotal(float total) {
 
 	this->total = total;
 }
@@ -35,15 +36,19 @@ void cart::view_cart() {
 	for (int i = 0; i < items.size(); i++) {
 		//Changed from a (1) so that it would be more consistent and easy to read.
 		cout << i+1 << ". ";
-    cout << items[i].getName() << "   ";
-		cout << items[i].getQuantity() << "   ";
-		cout << items[i].getPrice() << "\n";
+		cout << "Name: " << items[i].getName();
+		cout << " Quantity: " << items[i].getQuantity();
+		cout << " Price: $" << items[i].getPrice() << "\n";
 
 	}
+
+	view_total();
 
 }
 
 void cart::view_total() {
+	
+	total = 0;
 
 	for (int i = 0; i < items.size(); i++) {
 
@@ -51,7 +56,8 @@ void cart::view_total() {
 
 	}
 
-	cout << "Current Total: " << total;
+	cout << "Current Total: $" << total << "\n";
+
 }
 
 
@@ -71,17 +77,23 @@ void cart::add_history() {
 	ofstream file_in;
 	string user = getUsername();
 	
-	file_in.open(user + " History", std::ofstream::out | std::ofstream::app);
+	file_in.open(user + " History.txt", std::ofstream::out | std::ofstream::app);
 	
 	file_in << "\n";
+
+	file_in << "--Log--" << "\n";
+
 	
 	for (int i = 0; i < items.size(); i++) {
 
-		file_in << items[i].getName() << "   ";
-		file_in << items[i].getQuantity() << "   ";
-		file_in << items[i].getPrice() << "\n";
+		file_in << "(" << i + 1 << ") ";
+		file_in << "Name: "<< items[i].getName();
+		file_in << " Quantity: " << items[i].getQuantity();
+		file_in << " Price: $" << items[i].getPrice() << "\n";
 
 	}
+
+	file_in << "Total: " << total << "\n";
 
 	file_in.close();
 }
@@ -94,17 +106,20 @@ void cart::view_history() {
 	int count = 0;
 	string user = getUsername();
 
-	file_out.open(user + " History", std::ofstream::in);
+	file_out.open(user + " History.txt", std::ofstream::in);
+
+	cout << "---Checkout History---" << "\n";
+
 
 	if(file_out.is_open()){
 
 		while (getline(file_out, line)) {
-			if (count == 3) {
+			/*if (count == 3) {
 				count = 0;
 				cout << "\n";
-			}
+			}*/
 
-			cout << line << "   ";
+			cout << line << "\n";
 			count++;
 
 		}
@@ -120,13 +135,17 @@ void cart::view_history() {
 void cart::del_history() {
 
 	string user = getUsername();
-
+  user = user + " History.txt";
+  
+  /*
 	fstream file;
 
 	//Fix - file does not delete contents when truc
 	file.open(user + " History", std::ofstream::in | std::ofstream::trunc);
 	file << " ";
 	file.close();
+  */
+  remove(user.c_str());
 
 }
 
