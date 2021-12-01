@@ -15,30 +15,19 @@ public:
     string password;
     string shipping_info;
     string payment_info;
-    string adminpwd;
-    cart account_cart;
 
     //setters
     void setUser(string username);
     void setPassword(string password);
     void setShipping(string shipping_info);
     void setPayment(string payment_info);
-    void setAdminpwd(string adminpwd);
-    void setCartSize(int cart_size);
 
     //getters
     string getUser();
     string getPass();
     string getShipping();
     string getPayment();
-    void checkout();
-    void viewHistory();
-    void clearCart();
 
-    void printAccount();
-    void add_item(int quantity, class item item_to_add);
-    void printCart();
-    void remove_item(int item_number);
     void showinfo(vector<account> accounts);
 
     //create an account with information
