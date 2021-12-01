@@ -1,0 +1,4 @@
+admin
+password
+Starkville, MS
+1234567890
